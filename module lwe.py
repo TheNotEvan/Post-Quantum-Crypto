@@ -1,7 +1,4 @@
-<<<<<<< HEAD
 
-=======
->>>>>>> af3dcfebad35f3711d822fd535e49fc5aab98fef
 #Basic implementation of Module LWE, a public key cryptosystem believed to be safe against attacks by theoretical powerful quantumn computers.
 #This implementation is not secure and is for educational purposes only. Do not use this program with real data. 
 #Thanks to Elucyada for his explanation on Module LWE, which can be found at https://www.youtube.com/watch?v=lVQuV1sfSw4
@@ -46,11 +43,8 @@ def mat_vec_mul(M, v):
         out[i] = acc
     return out
 
-<<<<<<< HEAD
-#Multiply a vector u by a vector v, outputing a ring to the nth power. 
-=======
+
 #Multiple a vector u by a vector v, outputing a ring to the nth power. 
->>>>>>> af3dcfebad35f3711d822fd535e49fc5aab98fef
 def vec_dot(u,v):
     acc = np.zeros(n, dtype=int)
     for i in range(k):
@@ -88,12 +82,8 @@ v = poly_add(v, message * (q//2))
 
 ciphertext = (u,v)
 
-# Decryption
-<<<<<<< HEAD
-#Recover message using the formula message = [2/q(v - <S0 @ u>)]. This formula simplifies to the message plus noise, which is then rounded to determine if each bit is a zero or a one. 
-=======
+
 # Recover message using the formula message = [2/q(v - <S0 @ u>)]. This formula simplifies to the message plus noise, which is then rounded to determine if each bit is a zero or a one. 
->>>>>>> af3dcfebad35f3711d822fd535e49fc5aab98fef
 rec_message = vec_dot(u, S0)
 rec_message = poly_add(v, -rec_message)
 rec_message = ((rec_message  + (q//4)) // (q//2)) % 2
@@ -102,9 +92,3 @@ print(f'message: {message}')
 print(f'Recovered: {rec_message}')
 print(f'Match: {np.array_equal(rec_message, message)}')
 
-
-<<<<<<< HEAD
-=======
-
-
->>>>>>> af3dcfebad35f3711d822fd535e49fc5aab98fef
