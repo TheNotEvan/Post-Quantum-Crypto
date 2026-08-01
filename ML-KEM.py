@@ -153,3 +153,31 @@ def key_gen(d):
 
     return epke, dpke
 
+def encrypt(epke, m, r):
+    N = 0
+    t = [byte_decode(epke[i*384:(i+1)*384], 12) for i in range(k)]
+    rho = epke[384*k:384*k + 32]
+    A = np.zeros((k,k,n), dtype=np.int64)
+    y = np.zeros((k,n), dtype=np.int64)
+    e1 = np.zeros((k,n), dtype=np.int64)
+    for i in range(k):
+        for j in range(k):
+            A[i,j] = Sample_NTT(rho + bytes([j]) + bytes([i]))
+
+    for i in range(k):
+        y[i] = sample_poly_CBD(hashlib.shake_256(r + bytes([N])).digest(eta1 * 64))
+        N += 1
+
+    for i in range(k):
+        e1[i] = sample_poly_CBD(hashlib.shake_256(r + bytes([N])).digest(eta1 * 64))
+        N += 1
+    e2 = sample_poly_CBD(hashlib.shake_256(r + bytes([N])).digest(eta1 * 64))
+    AT = np.transpose(A, (1,0,2))
+    u = mat_vec_mul(AT, y)
+    for i in range(k):
+        u[i] = poly_add(u[i], e1[i])
+    mu = decompress(byte_decode(m, 1), 1)
+    v = vec_dot(t, y) + e2 + mu
+    c1 = b''.join(byte_encode(compress(u[i], du), du) for i in range(k))
+    c2 = byte_encode(compress(v, dv), dv)
+    return c1 + c2
