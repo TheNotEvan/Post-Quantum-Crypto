@@ -1,3 +1,5 @@
+
+
 import numpy as np
 import hashlib
 import SHAKE128
@@ -112,7 +114,7 @@ def Sample_NTT(B):
             j += 1
     return a
 
-def sample_poly_CDB(B):
+def sample_poly_CBD(B):
     b = bytes_to_bits(B)
     f = [0] * n
     for i in range(n):
@@ -122,3 +124,32 @@ def sample_poly_CDB(B):
             y += b[(2 * i * eta1) + eta1 + j]
         f[i] = (x - y) % q
     return f 
+
+def key_gen(d):
+    digest = hashlib.sha3_512(d + bytes([k])).digest()
+    rho, sigma = digest[:32], digest[32:]
+    N = 0
+    A = np.zeros((k,k,n), dtype=np.int64)
+    for i in range(k):
+        for j in range(k):
+            A[i,j] = Sample_NTT(rho + bytes([j]) + bytes([i]))
+
+    S = np.zeros((k,n), dtype=np.int64)
+    E = np.zeros((k,n), dtype=np.int64)
+    for i in range(k):
+        S[i] = sample_poly_CBD(hashlib.shake_256(sigma + bytes([N])).digest(eta1 * 64))
+        N += 1
+
+    for i in range(k):
+        E[i] = sample_poly_CBD(hashlib.shake_256(sigma + bytes([N])).digest(eta1 * 64))
+        N += 1
+
+    t  = mat_vec_mul(A, S)
+    for i in range(k):
+        t[i] = poly_add(t[i], E[i])
+
+    epke = b''.join([byte_encode(t[i], 12) for i in range(k)]) + rho
+    dpke = b''.join([byte_encode(S[i], 12) for i in range(k)])
+
+    return epke, dpke
+
