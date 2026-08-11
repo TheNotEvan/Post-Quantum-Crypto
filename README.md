@@ -2,6 +2,8 @@
 
 A python implementation of a LWE (Learning with Errors), Ring-LWE, Module-LWE, and ML-KEM (Module Lattice Key Encapsulation Mechanism) algorithims, with ML-KEM implemented as standarized in NIST FIPS 203.
 
+Made by a high school student interested in post-quantum cryptography.
+
 ## 🚨 Warning 🚨
 
 This program is meant for educational purposes only, and has not been security audits. Please do not use this in any real world environment. 
