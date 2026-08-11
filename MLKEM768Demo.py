@@ -3,17 +3,8 @@ import secrets
 import hmac
 import sys
 
-from MLKEM import ( 
-    ml_kem_key_gen,
-    encaps,
-    decaps,
-    encaps_internal,
-    decaps_internal,
-    key_gen_internal,
-    k,
-    du,
-    dv,
-)
+from MLKEM.params import ML_KEM_768 as mlkem
+from MLKEM.kem import ml_kem_key_gen, ml_kem_encaps, ml_kem_decaps
 
 def hx(b, count=16):
     s = b[:count].hex()
@@ -47,13 +38,13 @@ def main():
     data = message.encode("utf-8")
     print(f"message      : {message!r} ({len(data)} bytes)\n")
 
-    print("[1] Bob generates a keypair")
-    ek, dk = ml_kem_key_gen()
+    print(f"[1] Bob generates a keypair  ({mlkem.name})")
+    ek, dk = ml_kem_key_gen(mlkem)
     print(f"    ek  {len(ek)} bytes  {hx(ek)}")
     print(f"    dk  {len(dk)} bytes  {hx(dk)}\n")
 
     print("[2] Alice encapsulates against Bob's ek")
-    K_a, c = encaps(ek)
+    K_a, c = ml_kem_encaps(ek, mlkem)
     print(f"    K   {len(K_a)} bytes  {K_a.hex()}")
     print(f"    c   {len(c)} bytes  {hx(c)}\n")
 
@@ -63,7 +54,7 @@ def main():
     print(f"    wire total: {len(c) + len(blob)} bytes\n")
 
     print("[4] Bob decapsulates")
-    K_b = decaps(dk, c)
+    K_b = ml_kem_decaps(dk, c, mlkem)
     print(f"    K   {K_b.hex()}")
     print(f"    keys agree: {K_a == K_b}\n")
 
@@ -71,9 +62,6 @@ def main():
     out = dem_decrypt(K_b, blob)
     print(f"    recovered: {out.decode('utf-8')!r}")
     print(f"    round trip ok: {out == data}\n")
-
- 
-
 
 if __name__ == "__main__":
     main()

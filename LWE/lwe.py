@@ -39,8 +39,7 @@ dec = dec % q
 
 print(f'Decrypted value: {dec}')
 
-if dec < q//2:
-    print("Decrypted bit: 0")
-elif dec >= q//2:
-    print("Decrypted bit: 1")
+recovered_bit = 1 if (q/4 <= dec < 3*q/4) else 0
+
+print(f'Decrypted bit: {recovered_bit}')
 
