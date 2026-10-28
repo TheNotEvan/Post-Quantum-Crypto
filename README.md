@@ -4,9 +4,10 @@ A python implementation of a LWE (Learning with Errors), Ring-LWE, Module-LWE, a
 
 Made by a high school student interested in post-quantum cryptography.
 
-##  Warning 
+##  Notice 
+> [!Note]
+> This program is meant for educational purposes only, and has not been through security audits. Please do not use this in any real world environment. Except for the tests, all code in this project was my original work generated without the use of AI. In my ModuleLWE, I left comments that I originally intended to help me remember the math associated with the algorithim. I've left them there in order to show my full learning process, as well as the code for my LWE, which is a little messy. 
 
-This program is meant for educational purposes only, and has not been security audits. Please do not use this in any real world environment. 
 
 ## Features
 
